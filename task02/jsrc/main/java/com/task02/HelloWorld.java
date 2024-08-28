@@ -40,6 +40,8 @@ import java.util.Map;
 )
 public class HelloWorld implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
 
+	private static final Gson gson = new GsonBuilder().create();
+
 	@Override
 	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent event, Context context) {
 		String path = event.getRawPath();
@@ -61,10 +63,12 @@ public class HelloWorld implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
 		body.put("statusCode", statusCode);
 		body.put("message", message);
 
+		String jsonBody = gson.toJson(body);
+
 		return APIGatewayV2HTTPResponse.builder()
 				.withStatusCode(statusCode)
 				.withHeaders(headers)
-				.withBody(body.toString()) // Ensure body is properly serialized to JSON
+				.withBody(jsonBody) // Ensure body is properly serialized to JSON
 				.build();
 	}
 
